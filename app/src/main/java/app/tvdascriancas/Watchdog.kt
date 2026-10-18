@@ -64,7 +64,7 @@ class Watchdog : AccessibilityService() {
         // second ticker on top of the first.
         handler.removeCallbacks(tick)
         handler.post(tick)
-        Log.i(TAG, "vigia ligado — ${catalog.items.size} títulos")
+        Log.i(TAG, "watchdog on — ${catalog.items.size} titles")
     }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) = evaluate()
@@ -113,7 +113,7 @@ class Watchdog : AccessibilityService() {
 
     private fun sessionVerdict(pkg: String): Verdict {
         val s = Kids.session
-        if (s == null || s.item.app.pkg != pkg) return Verdict.Bad("app fora da lista: $pkg", 0)
+        if (s == null || s.item.app.pkg != pkg) return Verdict.Bad("app not on the list: $pkg", 0)
         if (s.startedAt != sessionKey) {
             sessionKey = s.startedAt
             everPlaying = false
@@ -139,26 +139,26 @@ class Watchdog : AccessibilityService() {
             // "Can't tell yet" (a profile picker, a title that hasn't started) is only
             // tolerated inside the start window — never a place to stay.
             verdict == Verdict.Unknown && !starting && s.item.app in SCREEN_READ_APPS ->
-                Verdict.Bad("sem confirmar o título", BLIND_GRACE_MS)
+                Verdict.Bad("title not confirmed", BLIND_GRACE_MS)
             else -> verdict
         }
     }
 
     private fun disney(item: Item, pkg: String): Verdict {
         val texts = screenText()
-        if (texts.any { t -> DISNEY_CATALOG.any { t.contains(it) } }) return Verdict.Bad("catálogo do Disney+", 1500)
+        if (texts.any { t -> DISNEY_CATALOG.any { t.contains(it) } }) return Verdict.Bad("Disney+ catalog", 1500)
         if (texts.any { t -> PROFILE_PICKER.any { t.contains(it) } }) return Verdict.Unknown
         val media = media(pkg)
         val title = media?.metadata?.description?.title?.toString()
         if (title != null && media.isPlayingOrPaused()) {
-            return if (item.matches(title)) Verdict.Ok else Verdict.Bad("tocando outro título: $title", 1500)
+            return if (item.matches(title)) Verdict.Ok else Verdict.Bad("playing another title: $title", 1500)
         }
         return screenVerdict(item, texts, pkg)
     }
 
     private fun apple(item: Item, pkg: String): Verdict {
         val texts = screenText()
-        if (texts.any { t -> APPLE_CATALOG.any { t.contains(it) } }) return Verdict.Bad("catálogo da Apple TV", 1500)
+        if (texts.any { t -> APPLE_CATALOG.any { t.contains(it) } }) return Verdict.Bad("Apple TV catalog", 1500)
         if (texts.any { t -> PROFILE_PICKER.any { t.contains(it) } }) return Verdict.Unknown
         return screenVerdict(item, texts, pkg)
     }
@@ -170,7 +170,7 @@ class Watchdog : AccessibilityService() {
         // first in the tree (Disney+: the title node; Apple TV: "Show, Genre, …"), while a
         // recommendation rail further down may list an approved title on another page.
         texts.take(HEADER_NODES).any { item.matches(it) } -> Verdict.Ok
-        else -> Verdict.Bad("tela fora de ${item.title}", 4000)
+        else -> Verdict.Bad("screen outside ${item.title}", 4000)
     }
 
     /**
@@ -182,7 +182,7 @@ class Watchdog : AccessibilityService() {
      * player (playing ok, paused ok for a while).
      */
     private fun blindVerdict(pkg: String): Verdict {
-        if (backSinceText) return Verdict.Bad("voltou da página do título", 2000)
+        if (backSinceText) return Verdict.Bad("went back from the title page", 2000)
         val ps = media(pkg)?.playbackState
         return when (ps?.state) {
             // Playing is the best evidence a text-less screen gives (Apple TV's show page
@@ -197,11 +197,11 @@ class Watchdog : AccessibilityService() {
             PlaybackState.STATE_PAUSED -> if (everPlaying || everOk) {
                 val now = SystemClock.elapsedRealtime()
                 if (pausedSince == 0L) pausedSince = now
-                if (now - pausedSince > MAX_PAUSE_MS) Verdict.Bad("pausado há muito tempo", 0) else Verdict.Ok
+                if (now - pausedSince > MAX_PAUSE_MS) Verdict.Bad("paused for too long", 0) else Verdict.Ok
             } else {
                 Verdict.Unknown
             }
-            else -> if (everPlaying || everOk) Verdict.Bad("tela sem informação e nada tocando", BLIND_GRACE_MS)
+            else -> if (everPlaying || everOk) Verdict.Bad("unreadable screen, nothing playing", BLIND_GRACE_MS)
             else Verdict.Unknown
         }
     }
@@ -210,13 +210,13 @@ class Watchdog : AccessibilityService() {
     override fun onKeyEvent(event: KeyEvent): Boolean {
         if (event.keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_UP) {
             backSinceText = true
-            Log.d(TAG, "tecla Voltar")
+            Log.d(TAG, "Back key")
         }
         return false
     }
 
     private fun notStarted(s: Kids.Session, now: Long): Verdict =
-        if (now - s.startedAt < START_TIMEOUT_MS) Verdict.Unknown else Verdict.Bad("não começou a tocar", 0)
+        if (now - s.startedAt < START_TIMEOUT_MS) Verdict.Unknown else Verdict.Bad("never started playing", 0)
 
     /** Netflix (and Prime): nothing to read but the playback state. */
     private fun playbackOnly(s: Kids.Session, pkg: String): Verdict {
@@ -232,16 +232,16 @@ class Watchdog : AccessibilityService() {
             // is a stale session or a browse/profile screen, not our title.
             PlaybackState.STATE_PAUSED -> if (everPlaying) {
                 if (pausedSince == 0L) pausedSince = now
-                if (now - pausedSince > MAX_PAUSE_MS) Verdict.Bad("pausado há muito tempo", 0) else Verdict.Ok
+                if (now - pausedSince > MAX_PAUSE_MS) Verdict.Bad("paused for too long", 0) else Verdict.Ok
             } else {
                 notStarted(s, now)
             }
-            else -> if (!everPlaying) notStarted(s, now) else Verdict.Bad("saiu do player", 5000)
+            else -> if (!everPlaying) notStarted(s, now) else Verdict.Bad("left the player", 5000)
         }
     }
 
     private fun kick(pkg: String, reason: String) {
-        Log.i(TAG, "voltando para a TV das crianças: $reason ($pkg)")
+        Log.i(TAG, "back to the kids' screen: $reason ($pkg)")
         media(pkg)?.transportControls?.pause()
         clear()
         cooldownUntil = SystemClock.elapsedRealtime() + KICK_COOLDOWN_MS

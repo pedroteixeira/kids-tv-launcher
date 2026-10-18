@@ -33,9 +33,9 @@ data class FreeApp(val title: String, val pkg: String, val poster: String?)
 
 class Catalog(val rows: List<String>, val items: List<Item>, val freeApps: List<FreeApp>) {
     companion object {
-        /** assets/titulos.json — the approved titles (see README). */
+        /** assets/titles.json — the approved titles (see README). */
         fun load(context: Context): Catalog {
-            val json = context.assets.open("titulos.json").bufferedReader().use { JSONObject(it.readText()) }
+            val json = context.assets.open("titles.json").bufferedReader().use { JSONObject(it.readText()) }
             val items = json.getJSONArray("items").let { a ->
                 (0 until a.length()).map { i ->
                     val o = a.getJSONObject(i)
@@ -43,7 +43,7 @@ class Catalog(val rows: List<String>, val items: List<Item>, val freeApps: List<
                     Item(
                         id = o.getString("id"),
                         title = o.getString("title"),
-                        row = o.optString("row").ifEmpty { if (o.getString("kind") == "movie") "Filmes" else "Séries" },
+                        row = o.optString("row").ifEmpty { if (o.getString("kind") == "movie") "Movies" else "Series" },
                         app = StreamApp.byKey(o.getString("app")),
                         link = o.getString("link"),
                         poster = o.optString("poster").ifEmpty { null },

@@ -102,15 +102,15 @@ class MainActivity : ComponentActivity() {
 
         Column(Modifier.fillMaxSize().background(Bg).padding(horizontal = 48.dp, vertical = 28.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Text("TV das crianças", color = Color.White, fontSize = 30.sp, fontWeight = FontWeight.Bold)
+                Text("Kids TV", color = Color.White, fontSize = 30.sp, fontWeight = FontWeight.Bold)
                 Spacer(Modifier.weight(1f))
-                if (!watchdogOn()) Text("vigia desligado  ", color = Color(0xFFFF8A80), fontSize = 14.sp)
+                if (!watchdogOn()) Text("watchdog off  ", color = Color(0xFFFF8A80), fontSize = 14.sp)
                 if (kidsMode) {
-                    Text("modo crianças  ", color = Accent, fontSize = 14.sp)
-                    SmallButton("Sair") { askPin = true }
+                    Text("kids mode  ", color = Accent, fontSize = 14.sp)
+                    SmallButton("Exit") { askPin = true }
                 } else {
-                    Text("TV livre  ", color = Muted, fontSize = 14.sp)
-                    SmallButton("Ligar modo crianças") {
+                    Text("free TV  ", color = Muted, fontSize = 14.sp)
+                    SmallButton("Turn on kids mode") {
                         // Kids mode means nothing without the watchdog running: refuse it.
                         if (watchdogOn()) {
                             Kids.setKidsMode(this@MainActivity, true)
@@ -118,7 +118,7 @@ class MainActivity : ComponentActivity() {
                         } else {
                             Toast.makeText(
                                 this@MainActivity,
-                                "Vigia desligado — reinstale pelo notebook (./install.sh)",
+                                "Watchdog is off — reinstall from the computer (./install.sh)",
                                 Toast.LENGTH_LONG,
                             ).show()
                         }
@@ -145,17 +145,16 @@ class MainActivity : ComponentActivity() {
             fun cardsOf(items: List<Item>) = items.filter { installed(it.app.pkg) }.map {
                 Card(it.title, it.poster, it.app.label) to {
                     if (!Kids.open(this@MainActivity, it)) {
-                        Toast.makeText(this@MainActivity, "${it.app.label} não abriu", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@MainActivity, "${it.app.label} didn't open", Toast.LENGTH_SHORT).show()
                     }
                 }
             }
-            // One grid, a header row per section: Séries, Filmes, then the free apps.
             // "Continuar assistindo" (last opened here) first, then the rows of
-            // titulos.json in its order, then the free apps.
+            // titles.json in its order, then the free apps.
             val byId = catalog.items.associateBy { it.id }
             val recent = Kids.recent(this@MainActivity).mapNotNull(byId::get)
             val sections: List<Pair<String, List<Pair<Card, () -> Unit>>>> = (listOf(
-                "Continuar assistindo" to cardsOf(recent),
+                "Continue watching" to cardsOf(recent),
             ) + catalog.rows.map { row -> row to cardsOf(catalog.items.filter { it.row == row }) } + listOf(
                 "Apps" to freeApps.map { app ->
                     Card(app.title, app.poster, "") to {
@@ -206,7 +205,7 @@ class MainActivity : ComponentActivity() {
                             Text(name, color = Muted, fontSize = 20.sp, fontWeight = FontWeight.SemiBold)
                             LazyRow(
                                 // ← → stay inside the row: at its ends focus stops instead of
-                                // jumping to whatever lies that way (e.g. the "Sair" button).
+                                // jumping to whatever lies that way (e.g. the "Exit" button).
                                 // Entering the row restores the title last focused in it.
                                 modifier = Modifier
                                     .focusRequester(rowFocus[si])
@@ -331,7 +330,7 @@ class MainActivity : ComponentActivity() {
                 .focusable(),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Text("PIN para sair do modo crianças", color = Color.White, fontSize = 22.sp)
+            Text("PIN to leave kids mode", color = Color.White, fontSize = 22.sp)
             Spacer(Modifier.size(18.dp))
             // Typed digits as dots only.
             Row(horizontalArrangement = Arrangement.spacedBy(18.dp)) {
@@ -375,8 +374,8 @@ class MainActivity : ComponentActivity() {
             }
             Spacer(Modifier.size(18.dp))
             Text(
-                if (wrong) "PIN errado — tente de novo"
-                else "↑ ↓ escolhe a linha · ← OK → digita · Voltar apaga",
+                if (wrong) "Wrong PIN — try again"
+                else "↑ ↓ pick a row · ← OK → type · Back deletes",
                 color = if (wrong) Color(0xFFFF8A80) else Muted, fontSize = 14.sp,
             )
         }

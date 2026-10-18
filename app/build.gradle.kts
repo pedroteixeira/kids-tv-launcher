@@ -24,7 +24,7 @@ android {
         buildConfigField("String", "KIDS_PIN", "\"${localProps.getProperty("kidsTv.pin", "1234")}\"")
     }
 
-    // The approved titles live in app/src/main/assets/titulos.json (see README).
+    // The approved titles live in app/src/main/assets/titles.json (see README).
 
     buildFeatures {
         compose = true

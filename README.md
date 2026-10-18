@@ -1,64 +1,63 @@
-# TV das crianças
+# Kids TV
 
-Um app para Google TV / Android TV que vira a "tela inicial" das crianças: fileiras de
-pôsteres só com os títulos que você liberou (Disney+, Apple TV, Netflix, Prime Video).
-Cada pôster abre o título direto no app oficial. Um **vigia** traz a TV de volta para essa
-tela quando as crianças saem para o catálogo do app, abrem outro título ou outro app, ou
-apertam Home.
+An app for Google TV / Android TV that becomes the kids' home screen: rows of posters
+with only the titles you approved (Disney+, Apple TV, Netflix, Prime Video). Each poster
+opens the title straight in the official app. A **watchdog** brings the TV back to this
+screen when the kids leave for the app's catalog, open another title or another app, or
+press Home.
 
-- **Modo crianças:** desligado por padrão, então a TV funciona normalmente para os adultos.
-  Você liga no botão "Ligar modo crianças" antes de passar a TV para eles. Para sair, é
-  preciso o PIN, digitado como o PIN do Google TV: ↑ ↓ escolhem uma linha de três números,
-  ← OK → digitam um deles, e na tela só aparecem bolinhas.
-- **Fileiras:** "Continuar assistindo" (os últimos 6 abertos naquela TV), depois as fileiras
-  do `titulos.json` (Séries, Filmes, Documentários…), depois apps livres (ex.: Jellyfin).
-- Os títulos que vêm no `titulos.json` são um **exemplo**: a lista de uma família.
+- **Kids mode:** off by default, so the TV works normally for the adults. Turn it on with
+  "Turn on kids mode" before handing the TV over. Leaving it takes a PIN, typed the way
+  Google TV asks for its own: ↑ ↓ pick a row of three digits, ← OK → type one of them,
+  and only dots show on screen.
+- **Rows:** "Continue watching" (the last 6 titles opened on that TV), then the rows from
+  `titles.json` (Series, Movies, Documentaries…), then free apps (e.g. Jellyfin).
+- The titles in `titles.json` are an **example**: one family's list.
 
-## O que você precisa
+## What you need
 
-- Uma TV com **Google TV / Android TV** (testado numa TCL com Android TV 14). Numa TV sem
-  Google TV, um Google TV Streamer / Chromecast com Google TV resolve.
-- Um computador com **Android SDK** e **JDK 17+**. O jeito mais fácil é instalar o
-  [Android Studio](https://developer.android.com/studio), que traz os dois, e apontar
-  `JAVA_HOME` para o JDK dele (`<android-studio>/jbr`).
-- `adb` no PATH (vem no SDK, em `platform-tools`).
+- A TV with **Google TV / Android TV** (tested on a TCL with Android TV 14). Any TV with a
+  Google TV Streamer / Chromecast with Google TV works too.
+- A computer with the **Android SDK** and **JDK 17+**. The easiest way is to install
+  [Android Studio](https://developer.android.com/studio), which ships both, and point
+  `JAVA_HOME` at its JDK (`<android-studio>/jbr`).
+- `adb` on your PATH (part of the SDK, in `platform-tools`).
 
-## Instalar
+## Install
 
-1. **Na TV, modo desenvolvedor:** Configurações → Sistema → Sobre → clique 7 vezes em
-   "Build do SO do Android TV".
-2. **Depuração por Wi-Fi:** Configurações → Sistema → Opções do desenvolvedor → Depuração
-   por Wi-Fi → Ativado. A TV precisa estar no **Wi-Fi** (com cabo de rede não funciona).
-3. **Parear uma vez:** na mesma tela, "Parear o dispositivo com um código de pareamento".
-   No computador:
+1. **Developer mode on the TV:** Settings → System → About → click "Android TV OS build"
+   7 times.
+2. **Wireless debugging:** Settings → System → Developer options → Wireless debugging → On.
+   The TV must be on **Wi-Fi** (it doesn't work over an Ethernet cable).
+3. **Pair once:** on the same screen, "Pair device with pairing code". On the computer:
    ```sh
-   adb pair <ip>:<porta-de-pareamento> <código>
+   adb pair <ip>:<pairing-port> <code>
    ```
-4. **PIN:** crie `local.properties` na raiz com `kidsTv.pin=1234` (o seu PIN). Sem ele, o PIN
-   é `1234`.
-5. **Instalar:** com o "Endereço IP e porta" que aparece na tela de Depuração por Wi-Fi
-   (essa porta muda quando a TV reinicia):
+4. **PIN:** create `local.properties` at the root with `kidsTv.pin=1234` (your PIN).
+   Without it, the PIN is `1234`.
+5. **Install**, with the "IP address & port" shown on the Wireless debugging screen (that
+   port changes whenever the TV restarts):
    ```sh
-   ./install.sh <ip>:<porta>
+   ./install.sh <ip>:<port>
    ```
-   O script compila, instala e liga o vigia. O Android não deixa ligar a acessibilidade de
-   um app instalado fora da Play Store pelas Configurações, então ele faz isso via `adb`.
-   Em TVs **TCL**, ele também libera a permissão `AUTO_START`; sem ela, o sistema da TCL
-   não deixa o vigia rodar.
+   The script builds, installs and switches the watchdog on. Android won't let you enable
+   accessibility for an app installed outside the Play Store from Settings, so it does it
+   over `adb`. On **TCL** TVs it also grants the `AUTO_START` permission; without it,
+   TCL's system refuses to run the watchdog.
 
-O app aparece na lista de apps da TV como **TV das crianças**.
+The app shows up in the TV's app list as **Kids TV**.
 
-## Escolher os títulos (`app/src/main/assets/titulos.json`)
+## Choosing the titles (`app/src/main/assets/titles.json`)
 
 ```json
 {
-  "rows": ["Séries", "Filmes", "Documentários"],
+  "rows": ["Series", "Movies", "Documentaries"],
   "items": [
     {
       "id": "bluey",
       "title": "Bluey",
       "kind": "series",
-      "row": "Séries",
+      "row": "Series",
       "app": "disney",
       "link": "https://www.disneyplus.com/browse/entity-fa6973b9-e7cf-49fb-81a2-d4908e4bf694",
       "poster": "https://images.justwatch.com/poster/185497966/s718/bluey.jpg",
@@ -69,45 +68,47 @@ O app aparece na lista de apps da TV como **TV das crianças**.
 }
 ```
 
-- `app`: `disney`, `apple`, `netflix` ou `prime`.
-- `link`: o endereço do título no site do serviço (é o que abre no app da TV):
+- `app`: `disney`, `apple`, `netflix` or `prime`.
+- `link`: the title's address on the service's website (that's what opens in the TV app):
   - **Disney+:** `https://www.disneyplus.com/browse/entity-…`
-  - **Apple TV:** `https://tv.apple.com/us/show/<nome>/umc.cmc.…` (ou `/movie/…`)
-  - **Netflix:** `https://www.netflix.com/watch/<id>`. Use `/watch/`, não `/title/`: o vigia
-    da Netflix exige que o vídeo esteja tocando.
+  - **Apple TV:** `https://tv.apple.com/us/show/<name>/umc.cmc.…` (or `/movie/…`)
+  - **Netflix:** `https://www.netflix.com/watch/<id>`. Use `/watch/`, not `/title/`: on
+    Netflix the watchdog requires the video to be playing.
   - **Prime Video:** `https://watch.amazon.com/watch?asin=<ASIN>&time=0&territory=US`
-- **Achar os links:** o [JustWatch](https://www.justwatch.com) mostra onde cada título está.
-  Abra a página do título no site do serviço e copie o endereço. **Confira na TV**: os links
-  do JustWatch às vezes erram (o de Bluey abria "Bluey Compilations", e os de Frozen 2 e
-  Moana abriam as versões Sing-Along).
-- `names`: o que o vigia aceita como "está neste título", ou seja, o nome como aparece na
-  página do app (em inglês, nos apps dos EUA). Vale o nome exato ou seguido de vírgula ou
-  dois-pontos; nunca "contém": "Bluey Compilations" não passa como Bluey.
-- `free_apps`: apps abertos sem vigia, como o Jellyfin, cujo servidor já restringe o que
-  as crianças veem.
+- **Finding links:** [JustWatch](https://www.justwatch.com) shows where each title streams.
+  Open the title's page on the service's website and copy the address. **Check it on the
+  TV**: JustWatch's links are sometimes wrong (Bluey's opened "Bluey Compilations", and
+  Frozen 2's and Moana's opened the Sing-Along versions).
+- `names`: what the watchdog accepts as "on this title", i.e. the name as it appears on the
+  app's page (English, on the US apps). A text matches when it is exactly a name or starts
+  with one followed by a comma or colon; never "contains", so "Bluey Compilations" doesn't
+  pass as Bluey.
+- `free_apps`: apps opened with no watchdog, such as Jellyfin, whose server already limits
+  what the kids see.
 
-Depois de editar, rode `./install.sh <ip>:<porta>` de novo.
+After editing, run `./install.sh <ip>:<port>` again.
 
-## O que o vigia consegue ver em cada app
+## What the watchdog can see in each app
 
-| App | O que ele usa |
+| App | What it uses |
 |---|---|
-| Disney+ | O nome do que está tocando e o texto da tela. Detecta o catálogo pelo menu. |
-| Apple TV | O texto da tela (às vezes). Detecta o menu lateral. Telas sem texto: se está tocando, e a tecla Voltar a partir da página da série. |
-| Netflix / Prime | Só se está tocando, pausado ou parado. Sair do player leva de volta à tela das crianças. |
+| Disney+ | The now-playing title and the screen text. Detects the catalog by its menu. |
+| Apple TV | The screen text (sometimes). Detects the sidebar. On text-less screens: whether it's playing, and the Back key pressed on the show page. |
+| Netflix / Prime | Only whether it's playing, paused or stopped. Leaving the player sends the TV back to the kids' screen. |
 
-**Limitações conhecidas:**
-- Na **Netflix e no Prime**, uma criança rápida consegue trocar de título em poucos
-  segundos. Combine com o controle por título do perfil infantil da Netflix.
-- Na **Apple TV**, abrir uma recomendação dentro da página da série não é detectado.
-- Quando a TV **reinicia**, a porta da depuração muda. Reinstalar exige a porta nova.
-- O app fica com o PIN dentro do APK: é para segurar crianças, não adultos determinados.
+**Known limitations:**
+- On **Netflix and Prime**, a fast kid can switch titles within a few seconds. Pair this
+  with the per-title restrictions of the Netflix kids profile.
+- On **Apple TV**, opening a recommendation from inside a show's page isn't detected.
+- When the TV **restarts**, the debugging port changes; reinstalling needs the new one.
+- The PIN is baked into the APK: it keeps kids out, not determined adults.
 
-## Ideias (feitas no projeto original, fora desta versão)
+## Ideas (built in the original project, left out of this version)
 
-- **Tempo de TV:** o vigia já sabe, a cada segundo, qual título está na frente e se está
-  tocando. No projeto original, ele grava um registro por título (contando só os segundos
-  tocando), guarda num arquivo na TV e envia para um servidor próprio, que mostra minutos
-  por dia e os títulos mais vistos. Dá para ligar isso a uma planilha ou a um banco simples.
-- **Limite diário** de tempo a partir desse registro.
-- **Perfil por criança** ao ligar o modo crianças, cada um com suas fileiras.
+- **TV time:** every second, the watchdog already knows which title is in front and
+  whether it's playing. In the original project it records one segment per title
+  (counting only the seconds that play), keeps it in a file on the TV and sends it to its
+  own server, which shows minutes per day and the most-watched titles. A spreadsheet or a
+  simple database would work too.
+- A **daily time limit** built on that log.
+- **One profile per child** when turning kids mode on, each with its own rows.

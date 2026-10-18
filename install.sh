@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Install the kids' TV app on a Google TV over ADB and switch its watchdog on.
 #   ./install.sh <ip:port>     (builds the app, installs it, switches the watchdog on)
-# The TV must be paired once (Opções do desenvolvedor → Depuração por Wi-Fi →
-# Parear com código: `adb pair <ip:pairport> <code>`). The port changes when the TV
+# The TV must be paired once (Developer options → Wireless debugging → Pair device
+# with pairing code: `adb pair <ip:pairport> <code>`). The port changes when the TV
 # restarts or debugging is toggled — read it on that same screen.
 set -euo pipefail
 cd "$(dirname "$0")"
@@ -45,4 +45,4 @@ adb shell settings put secure enabled_accessibility_services "${others:+$others:
 adb shell settings put secure accessibility_enabled 1
 # "Now playing" of other apps (MediaSessionManager) needs a notification listener.
 adb shell cmd notification allow_listener "$LISTENER"
-echo "vigia instalado (só age com o modo crianças ligado, no app)"
+echo "watchdog installed (it only acts while kids mode is on, in the app)"
