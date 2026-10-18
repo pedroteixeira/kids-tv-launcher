@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TV das crianças</string>
+    <string name="watchdog_name">TV das crianças — vigia</string>
+    <string name="watchdog_description">Mantém as crianças nos títulos liberados: volta para a TV das crianças quando saem para o catálogo de um app de streaming ou abrem outro app.</string>
+</resources>

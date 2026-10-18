@@ -1,0 +1,276 @@
+{
+  "rows": [
+    "Séries",
+    "Filmes",
+    "Documentários"
+  ],
+  "items": [
+    {
+      "id": "bluey-2018",
+      "title": "Bluey",
+      "kind": "series",
+      "row": "Séries",
+      "app": "disney",
+      "link": "https://www.disneyplus.com/browse/entity-fa6973b9-e7cf-49fb-81a2-d4908e4bf694",
+      "poster": "https://images.justwatch.com/poster/185497966/s718/bluey.jpg",
+      "names": [
+        "Bluey"
+      ]
+    },
+    {
+      "id": "the-snoopy-show",
+      "title": "The Snoopy Show",
+      "kind": "series",
+      "row": "Séries",
+      "app": "apple",
+      "link": "https://tv.apple.com/us/show/the-snoopy-show/umc.cmc.5iswprrvjjw6ab020a17x4ca3",
+      "poster": "https://images.justwatch.com/poster/266455762/s718/the-snoopy-show.jpg",
+      "names": [
+        "The Snoopy Show"
+      ]
+    },
+    {
+      "id": "camp-snoopy",
+      "title": "Camp Snoopy",
+      "kind": "series",
+      "row": "Séries",
+      "app": "apple",
+      "link": "https://tv.apple.com/us/show/camp-snoopy/umc.cmc.4erhnrmkf9vgeojl3uryxsc0j",
+      "poster": "https://images.justwatch.com/poster/348215453/s718/camp-snoopy.jpg",
+      "names": [
+        "Camp Snoopy"
+      ]
+    },
+    {
+      "id": "snoopy-in-space",
+      "title": "Snoopy in Space",
+      "kind": "series",
+      "row": "Séries",
+      "app": "apple",
+      "link": "https://tv.apple.com/us/show/snoopy-in-space-the-search-for-life/umc.cmc.12l86ri6vfjlimw2m8b8dzszs",
+      "poster": "https://images.justwatch.com/poster/154216755/s718/snoopy-in-space.jpg",
+      "names": [
+        "Snoopy in Space"
+      ]
+    },
+    {
+      "id": "ask-the-storybots",
+      "title": "Ask the StoryBots",
+      "kind": "series",
+      "row": "Séries",
+      "app": "netflix",
+      "link": "https://www.netflix.com/watch/80108159",
+      "poster": "https://images.justwatch.com/poster/301795314/s718/ask-the-storybots.jpg",
+      "names": [
+        "Ask the StoryBots"
+      ]
+    },
+    {
+      "id": "robozuna-2018",
+      "title": "Robozuna",
+      "kind": "series",
+      "row": "Séries",
+      "app": "netflix",
+      "link": "https://www.netflix.com/watch/80147920",
+      "poster": "https://images.justwatch.com/poster/320686382/s718/robozuna.jpg",
+      "names": [
+        "Robozuna"
+      ]
+    },
+    {
+      "id": "big-nate",
+      "title": "Big Nate",
+      "kind": "series",
+      "row": "Séries",
+      "app": "prime",
+      "link": "https://watch.amazon.com/watch?asin=B09Q1P9HLK&time=0&territory=US",
+      "poster": "https://images.justwatch.com/poster/318790607/s718/big-nate.jpg",
+      "names": [
+        "Big Nate"
+      ]
+    },
+    {
+      "id": "the-wild-robot-2024",
+      "title": "Robô Selvagem",
+      "kind": "movie",
+      "row": "Filmes",
+      "app": "prime",
+      "link": "https://watch.amazon.com/watch?asin=B0DBZGBPW2&time=0&territory=US",
+      "poster": "https://images.justwatch.com/poster/317457812/s718/the-wild-robot.jpg",
+      "names": [
+        "Robô Selvagem",
+        "The Wild Robot"
+      ]
+    },
+    {
+      "id": "frozen-2013",
+      "title": "Frozen",
+      "kind": "movie",
+      "row": "Filmes",
+      "app": "disney",
+      "link": "https://www.disneyplus.com/browse/entity-04c97b72-504b-47f2-9c6f-fe13d9aea82f",
+      "poster": "https://images.justwatch.com/poster/285416360/s718/frozen-2013.jpg",
+      "names": [
+        "Frozen"
+      ]
+    },
+    {
+      "id": "frozen-ii-2019",
+      "title": "Frozen 2",
+      "kind": "movie",
+      "row": "Filmes",
+      "app": "disney",
+      "link": "https://www.disneyplus.com/browse/entity-3f9272e2-33f1-47db-bb2e-9aa2c7c85a96",
+      "poster": "https://images.justwatch.com/poster/169113921/s718/frozen-ii.jpg",
+      "names": [
+        "Frozen 2"
+      ]
+    },
+    {
+      "id": "moana-2016",
+      "title": "Moana",
+      "kind": "movie",
+      "row": "Filmes",
+      "app": "disney",
+      "link": "https://www.disneyplus.com/browse/entity-e8896bfa-1052-41f7-ae2e-00255d77cf05",
+      "poster": "https://images.justwatch.com/poster/285528273/s718/moana-2016.jpg",
+      "names": [
+        "Moana"
+      ]
+    },
+    {
+      "id": "moana-2-2024",
+      "title": "Moana 2",
+      "kind": "movie",
+      "row": "Filmes",
+      "app": "disney",
+      "link": "https://www.disneyplus.com/browse/entity-a21ee2fc-421e-4839-bfcc-0bf2ba815875",
+      "poster": "https://images.justwatch.com/poster/324597604/s718/moana-2.jpg",
+      "names": [
+        "Moana 2"
+      ]
+    },
+    {
+      "id": "elio",
+      "title": "Elio",
+      "kind": "movie",
+      "row": "Filmes",
+      "app": "disney",
+      "link": "https://www.disneyplus.com/browse/entity-367ee1b6-1a50-413a-96f6-655175166f38",
+      "poster": "https://images.justwatch.com/poster/334729152/s718/elio.jpg",
+      "names": [
+        "Elio"
+      ]
+    },
+    {
+      "id": "hoppers-2026",
+      "title": "Hoppers",
+      "kind": "movie",
+      "row": "Filmes",
+      "app": "disney",
+      "link": "https://www.disneyplus.com/browse/entity-38ce207f-bd54-4e94-92b9-5854b5a409fe",
+      "poster": "https://images.justwatch.com/poster/347282291/s718/hoppers.jpg",
+      "names": [
+        "Hoppers"
+      ]
+    },
+    {
+      "id": "the-iron-giant-1999",
+      "title": "O Gigante de Ferro",
+      "kind": "movie",
+      "row": "Filmes",
+      "app": "prime",
+      "link": "https://watch.amazon.com/watch?asin=B00BZ92G0W&time=0&territory=US",
+      "poster": "https://images.justwatch.com/poster/250882778/s718/the-iron-giant.jpg",
+      "names": [
+        "O Gigante de Ferro",
+        "The Iron Giant"
+      ]
+    },
+    {
+      "id": "prehistoric-planet-2022",
+      "title": "Prehistoric Planet",
+      "kind": "series",
+      "row": "Documentários",
+      "app": "apple",
+      "link": "https://tv.apple.com/us/show/prehistoric-planet/umc.cmc.4lh4bmztauvkooqz400akxav",
+      "poster": "https://images.justwatch.com/poster/338690520/s718/prehistoric-planet.jpg",
+      "names": [
+        "Prehistoric Planet"
+      ]
+    },
+    {
+      "id": "tiny-world-2020",
+      "title": "Tiny World",
+      "kind": "series",
+      "row": "Documentários",
+      "app": "apple",
+      "link": "https://tv.apple.com/us/show/tiny-world/umc.cmc.1sid6bqjoez4sxonuulq12af7",
+      "poster": "https://images.justwatch.com/poster/244176058/s718/tiny-world.jpg",
+      "names": [
+        "Tiny World"
+      ]
+    },
+    {
+      "id": "earth-at-night-in-color-2020",
+      "title": "Earth at Night in Color",
+      "kind": "series",
+      "row": "Documentários",
+      "app": "apple",
+      "link": "https://tv.apple.com/us/show/earth-at-night-in-color/umc.cmc.37dvcdop7ub4m8tx9fnczl1a1",
+      "poster": "https://images.justwatch.com/poster/336855739/s718/earth-at-night-in-color.jpg",
+      "names": [
+        "Earth at Night in Color",
+        "Earth at Night in Colour"
+      ]
+    },
+    {
+      "id": "a-real-bugs-life-2024",
+      "title": "A Real Bug's Life",
+      "kind": "series",
+      "row": "Documentários",
+      "app": "disney",
+      "link": "https://www.disneyplus.com/browse/entity-d5193cc5-fb8e-4414-826c-d311daa1bef8",
+      "poster": "https://images.justwatch.com/poster/310435096/s718/a-real-bugs-life.jpg",
+      "names": [
+        "A Real Bug's Life"
+      ]
+    },
+    {
+      "id": "my-octopus-teacher-2020",
+      "title": "My Octopus Teacher",
+      "kind": "movie",
+      "row": "Documentários",
+      "app": "netflix",
+      "link": "https://www.netflix.com/watch/81045007",
+      "poster": "https://images.justwatch.com/poster/205400823/s718/my-octopus-teacher.jpg",
+      "names": [
+        "My Octopus Teacher"
+      ]
+    },
+    {
+      "id": "our-universe-2022",
+      "title": "Our Universe",
+      "kind": "series",
+      "row": "Documentários",
+      "app": "netflix",
+      "link": "https://www.netflix.com/watch/81243961",
+      "poster": "https://images.justwatch.com/poster/301736594/s718/our-universe.jpg",
+      "names": [
+        "Our Universe"
+      ]
+    }
+  ],
+  "free_apps": [
+    {
+      "title": "Jellyfin",
+      "package": "org.jellyfin.androidtv",
+      "poster": ""
+    },
+    {
+      "title": "Wholphin",
+      "package": "com.github.damontecres.wholphin",
+      "poster": ""
+    }
+  ]
+}
