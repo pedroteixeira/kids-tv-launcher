@@ -21,7 +21,7 @@ export ANDROID_SERIAL="$TARGET"
 adb get-state >/dev/null
 
 adb install -r "$APK" >/dev/null
-echo "instalado: $PKG"
+echo "installed: $PKG"
 
 # TCL TVs only let the system start a third-party app's services when the app holds
 # TCL's AUTO_START app-op ("TclAppBoot: forbid bind service … callee doesn't have

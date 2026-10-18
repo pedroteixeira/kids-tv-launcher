@@ -6,6 +6,8 @@ opens the title straight in the official app. A **watchdog** brings the TV back 
 screen when the kids leave for the app's catalog, open another title or another app, or
 press Home.
 
+![The kids' screen on a TCL Google TV: rows of approved titles](docs/home.jpg)
+
 - **Kids mode:** off by default, so the TV works normally for the adults. Turn it on with
   "Turn on kids mode" before handing the TV over. Leaving it takes a PIN, typed the way
   Google TV asks for its own: ↑ ↓ pick a row of three digits, ← OK → type one of them,
