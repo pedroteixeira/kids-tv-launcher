@@ -112,3 +112,7 @@ After editing, run `./install.sh <ip>:<port>` again.
   simple database would work too.
 - A **daily time limit** built on that log.
 - **One profile per child** when turning kids mode on, each with its own rows.
+
+## License
+
+MIT — see [LICENSE](LICENSE).
