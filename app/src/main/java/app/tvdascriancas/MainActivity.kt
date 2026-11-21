@@ -69,18 +69,21 @@ private val Muted = Color(0xFFB8B2D9)
 
 /** The kids' screen: posters of the approved titles; opening one starts a watchdog session. */
 class MainActivity : ComponentActivity() {
-    private lateinit var catalog: Catalog
+    // State, so a new list from the installer redraws the screen on return.
+    private var catalog by mutableStateOf(Catalog(emptyList(), emptyList(), emptyList()))
     private var resumed by mutableStateOf(0) // bumps on every return, to re-read kids mode
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        catalog = Catalog.load(this)
+        catalog = Catalog.current(this)
         setContent { KidsScreen(resumed) }
     }
 
     override fun onResume() {
         super.onResume()
         Kids.session = null
+        Kids.adoptPin(this)
+        catalog = Catalog.current(this) // the installer may have sent a new list
         resumed++
     }
 
@@ -105,6 +108,10 @@ class MainActivity : ComponentActivity() {
                 Text("Kids TV", color = Color.White, fontSize = 30.sp, fontWeight = FontWeight.Bold)
                 Spacer(Modifier.weight(1f))
                 if (!watchdogOn()) Text("watchdog off  ", color = Color(0xFFFF8A80), fontSize = 14.sp)
+                catalog.error?.takeIf { !kidsMode }?.let {
+                    Text("$it — showing the example  ", color = Color(0xFFFF8A80), fontSize = 14.sp,
+                        maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.weight(1f, fill = false))
+                }
                 if (kidsMode) {
                     Text("kids mode  ", color = Accent, fontSize = 14.sp)
                     SmallButton("Exit") { askPin = true }
@@ -118,7 +125,7 @@ class MainActivity : ComponentActivity() {
                         } else {
                             Toast.makeText(
                                 this@MainActivity,
-                                "Watchdog is off — reinstall from the computer (./install.sh)",
+                                "Watchdog is off — run the installer again from the computer",
                                 Toast.LENGTH_LONG,
                             ).show()
                         }
@@ -293,7 +300,7 @@ class MainActivity : ComponentActivity() {
      */
     @Composable
     private fun PinPad(onDone: (Boolean) -> Unit) {
-        val pin = BuildConfig.KIDS_PIN
+        val pin = Kids.pin(this)
         val rows = listOf("123", "456", "789", "0")
         var typed by remember { mutableStateOf("") }
         var row by remember { mutableStateOf(0) }

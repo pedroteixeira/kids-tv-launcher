@@ -16,38 +16,66 @@ press Home.
   `titles.json` (Series, Movies, Documentaries…), then free apps (e.g. Jellyfin).
 - The titles in `titles.json` are an **example**: one family's list.
 
-## What you need
-
-- A TV with **Google TV / Android TV** (tested on a TCL with Android TV 14). Any TV with a
-  Google TV Streamer / Chromecast with Google TV works too.
-- A computer with the **Android SDK** and **JDK 17+**. The easiest way is to install
-  [Android Studio](https://developer.android.com/studio), which ships both, and point
-  `JAVA_HOME` at its JDK (`<android-studio>/jbr`).
-- `adb` on your PATH (part of the SDK, in `platform-tools`).
-
 ## Install
 
-1. **Developer mode on the TV:** Settings → System → About → click "Android TV OS build"
-   7 times.
-2. **Wireless debugging:** Settings → System → Developer options → Wireless debugging → On.
-   The TV must be on **Wi-Fi** (it doesn't work over an Ethernet cable).
-3. **Pair once:** on the same screen, "Pair device with pairing code". On the computer:
-   ```sh
-   adb pair <ip>:<pairing-port> <code>
-   ```
-4. **PIN:** create `local.properties` at the root with `kidsTv.pin=1234` (your PIN).
-   Without it, the PIN is `1234`.
-5. **Install**, with the "IP address & port" shown on the Wireless debugging screen (that
-   port changes whenever the TV restarts):
-   ```sh
-   ./install.sh <ip>:<port>
-   ```
-   The script builds, installs and switches the watchdog on. Android won't let you enable
-   accessibility for an app installed outside the Play Store from Settings, so it does it
-   over `adb`. On **TCL** TVs it also grants the `AUTO_START` permission; without it,
-   TCL's system refuses to run the watchdog.
+You need the TV (**Google TV / Android TV**: tested on a TCL with Android TV 14; a Google
+TV Streamer or Chromecast with Google TV works too) and, for the install only, a computer
+on the same Wi-Fi. Nothing to set up on the computer: the installer downloads Google's
+`adb` and the latest release of the app by itself.
 
-The app shows up in the TV's app list as **Kids TV**.
+1. **On the TV, once:** Settings → System → About → click "Android TV OS build" 7 times
+   (developer mode). Then Settings → System → Developer options → **Wireless debugging**
+   → On. The TV must be on Wi-Fi (it doesn't work over an Ethernet cable).
+2. **Write your list** of titles: copy [`titles.json`](app/src/main/assets/titles.json)
+   and edit it (see [Choosing the titles](#choosing-the-titles-titlesjson)). You can skip
+   this to try the app with the example list.
+3. **Run the installer** on the computer:
+
+   macOS / Linux (Terminal):
+   ```sh
+   bash <(curl -fsSL https://raw.githubusercontent.com/pedroteixeira/kids-tv-launcher/main/install.sh) --titles titles.json
+   ```
+   Windows (PowerShell):
+   ```powershell
+   & ([scriptblock]::Create((irm https://raw.githubusercontent.com/pedroteixeira/kids-tv-launcher/main/install.ps1))) -Titles titles.json
+   ```
+
+   It asks for the "IP address & port" shown on the TV's Wireless debugging screen, and
+   the first time walks you through pairing ("Pair device with pairing code"). Then you
+   choose the **PIN** that leaves kids mode, and it installs the app, sends your list and
+   switches the watchdog on.
+
+   The watchdog is an accessibility service, and Android won't let you enable one from
+   Settings for an app installed outside the Play Store: that is the step that needs the
+   computer. On **TCL** TVs the installer also grants the `AUTO_START` permission;
+   without it, TCL's system refuses to run the watchdog.
+
+The app shows up in the TV's app list as **Kids TV**. You can turn Wireless debugging off
+afterwards.
+
+**Changing the list or the PIN later:** turn Wireless debugging back on, edit your file and
+run the same command with `--titles-only` (`-TitlesOnly` on Windows). The app picks the new
+list up on its own. The port changes whenever the TV restarts: read it again on that
+screen. A list with a mistake doesn't break the TV: the app shows the error at the top
+(outside kids mode) and the example list until you fix it.
+
+**Updating the app:** run the installer again without `--titles-only`.
+
+<details>
+<summary>Building from source</summary>
+
+With JDK 17+ and the Android SDK (the easiest way is [Android Studio](https://developer.android.com/studio),
+with `JAVA_HOME` pointing at its `<android-studio>/jbr`), from a checkout:
+
+```sh
+./install.sh --build --titles titles.json
+```
+
+A build from source is signed with your own debug key, so it can't update a TV that has the
+released app (or the other way round): the installer offers to uninstall it first, which
+also clears the PIN and the "Continue watching" row.
+
+</details>
 
 ## Choosing the titles (`app/src/main/assets/titles.json`)
 
@@ -88,7 +116,7 @@ The app shows up in the TV's app list as **Kids TV**.
 - `free_apps`: apps opened with no watchdog, such as Jellyfin, whose server already limits
   what the kids see.
 
-After editing, run `./install.sh <ip>:<port>` again.
+After editing, send it with the installer's `--titles-only` (see [Install](#install)).
 
 ## What the watchdog can see in each app
 
@@ -102,8 +130,9 @@ After editing, run `./install.sh <ip>:<port>` again.
 - On **Netflix and Prime**, a fast kid can switch titles within a few seconds. Pair this
   with the per-title restrictions of the Netflix kids profile.
 - On **Apple TV**, opening a recommendation from inside a show's page isn't detected.
-- When the TV **restarts**, the debugging port changes; reinstalling needs the new one.
-- The PIN is baked into the APK: it keeps kids out, not determined adults.
+- When the TV **restarts**, the debugging port changes; the installer needs the new one.
+- The PIN keeps kids out, not determined adults: anyone with the TV in developer mode and a
+  computer can switch the watchdog off.
 
 ## Ideas (built in the original project, left out of this version)
 
@@ -114,6 +143,13 @@ After editing, run `./install.sh <ip>:<port>` again.
   simple database would work too.
 - A **daily time limit** built on that log.
 - **One profile per child** when turning kids mode on, each with its own rows.
+
+## Releases (maintainers)
+
+Pushing a tag `vMAJOR.MINOR.PATCH` runs [`release.yml`](.github/workflows/release.yml): it
+builds the APK signed with the release key (repository secrets `KIDS_TV_KEYSTORE_BASE64`
+and `KIDS_TV_KEYSTORE_PASSWORD`) and publishes it as `kids-tv.apk`, which is what the
+installers download. Keep a backup of that key: TVs only accept updates signed with it.
 
 ## License
 
