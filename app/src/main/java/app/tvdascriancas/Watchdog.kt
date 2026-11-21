@@ -28,7 +28,7 @@ import android.view.accessibility.AccessibilityWindowInfo
  */
 class Watchdog : AccessibilityService() {
     private val handler = Handler(Looper.getMainLooper())
-    private lateinit var catalog: Catalog
+    private val catalog get() = Catalog.current(this)
 
     // A bad condition must persist for its grace period before we act, so loading
     // screens and transitions between episodes don't bounce the kids.
@@ -59,7 +59,6 @@ class Watchdog : AccessibilityService() {
     }
 
     override fun onServiceConnected() {
-        catalog = Catalog.load(this)
         // The system can rebind the service (e.g. while a UI dump runs): never stack a
         // second ticker on top of the first.
         handler.removeCallbacks(tick)
@@ -83,7 +82,6 @@ class Watchdog : AccessibilityService() {
     }
 
     private fun evaluate() {
-        if (!::catalog.isInitialized) return
         if (!Kids.isKidsMode(this)) return clear()
         if (SystemClock.elapsedRealtime() < cooldownUntil) return
         val pkg = foregroundPackage() ?: return

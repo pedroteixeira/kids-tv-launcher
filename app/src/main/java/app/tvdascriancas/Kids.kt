@@ -5,6 +5,8 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.SystemClock
+import android.util.Log
+import java.io.File
 
 /**
  * Shared state between the launcher screen and the watchdog (same process).
@@ -24,6 +26,40 @@ object Kids {
     private const val KIDS_MODE = "kids_mode"
     private const val RECENT = "recent" // item ids, most recent first
     private const val RECENT_MAX = 6
+    private const val PIN = "pin"
+
+    /** Where the installer drops a new PIN; [adoptPin] moves it into private storage. */
+    const val PIN_FILE = "pin"
+
+    /** The PIN that leaves kids mode: set by the installer, else the build's default. */
+    fun pin(context: Context): String {
+        adoptPin(context)
+        return context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).getString(PIN, null)
+            ?: BuildConfig.KIDS_PIN
+    }
+
+    /**
+     * The installer can only write to the app's shared files folder, so a PIN it sends
+     * arrives there as a file: keep it in the app's private preferences and delete the
+     * file, so it doesn't stay where adb (or a file manager with full access) can read it.
+     */
+    fun adoptPin(context: Context) {
+        val file = context.getExternalFilesDir(null)?.let { File(it, PIN_FILE) } ?: return
+        if (!file.isFile) return
+        val pin = try {
+            file.readText().trim()
+        } catch (e: Exception) {
+            // Left in place: the installer's next run fixes it (it makes the file readable).
+            Log.w("KidsTV", "PIN file unreadable", e)
+            return
+        }
+        if (pin.matches(Regex("\\d{4,8}"))) {
+            context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit().putString(PIN, pin).commit()
+        } else {
+            Log.w("KidsTV", "PIN file ignored: not 4-8 digits")
+        }
+        file.delete()
+    }
 
     /** The titles last opened from the kids' screen on this TV, most recent first. */
     fun recent(context: Context): List<String> =
